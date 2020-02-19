@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from crawler.views import crawler
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('crawl/', crawler),
+
 ]
