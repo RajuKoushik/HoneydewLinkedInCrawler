@@ -1,20 +1,31 @@
 import json
+from urllib.request import Request, urlopen
 
 import requests
+from bs4 import BeautifulSoup
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from fake_useragent import UserAgent
+
+ua = UserAgent()  # From here we generate a random user agent
+proxies = []
 
 
 def get_proxies():
-    url = 'https://free-proxy-list.net/'
-    response = requests.get(url)
-    parser = response.text
-    proxies = set()
-    for i in parser.xpath('//tbody/tr')[:10]:
-        if i.xpath('.//td[7][contains(text(),"yes")]'):
-            # Grabbing IP and corresponding PORT
-            proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
-            proxies.add(proxy)
+    proxies_req = Request('https://www.sslproxies.org/')
+    proxies_req.add_header('User-Agent', ua.random)
+    proxies_doc = urlopen(proxies_req).read().decode('utf8')
+
+    soup = BeautifulSoup(proxies_doc, 'html.parser')
+    proxies_table = soup.find(id='proxylisttable')
+
+    # Save proxies in the array
+    for row in proxies_table.tbody.find_all('tr'):
+        proxies.append({
+            'ip': row.find_all('td')[0].string,
+            'port': row.find_all('td')[1].string
+        })
+
     return proxies
 
 
@@ -22,10 +33,14 @@ def get_proxies():
 def crawler(request):
     print(request.GET)
 
+    proxy_list = get_proxies()
+
+    print(proxy_list)
+
     # making a request to a google custom search engine
     custom_search_engine_url = "https://www.googleapis.com/customsearch/v1"
 
-    linkedin_url_list = []
+    linkedin_url_list = set()
 
     for i in range(0, 6):
         print(str(i) + "loop info")
@@ -39,7 +54,7 @@ def crawler(request):
         custom_search_engine_data = r.json()
 
         for j in range(len(custom_search_engine_data['items'])):
-            linkedin_url_list.append(custom_search_engine_data['items'][j]['link'])
+            linkedin_url_list.add(custom_search_engine_data['items'][j]['link'])
 
             # linkedin_url_data = custom_search_engine_data['items']
             #
@@ -48,7 +63,7 @@ def crawler(request):
     return HttpResponse(
         json.dumps(
             {
-                'linkedin_url-list': linkedin_url_list,
+                'linkedin_url-list': str(linkedin_url_list),
                 'post_name': 1,
                 'post_content': 1,
 
