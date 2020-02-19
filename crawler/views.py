@@ -15,21 +15,30 @@ def crawler(request):
     # making a request to a google custom search engine
     custom_search_engine_url = "https://www.googleapis.com/customsearch/v1"
 
-    PARAMS = {'key': 'AIzaSyByUxDR0YO701YOETlSJZn6bfFNWIjtQBM', 'cx': '009462381166450434430:ecyvn9zudgu',
-              'q': request.GET['query']}
+    linkedin_url_list = []
 
-    # sending get request and saving the response as response object
-    r = requests.get(url=custom_search_engine_url, params=PARAMS)
+    for i in range(0, 6):
+        print(str(i) + "loop info")
+        PARAMS = {'key': 'AIzaSyByUxDR0YO701YOETlSJZn6bfFNWIjtQBM', 'cx': '009462381166450434430:ecyvn9zudgu',
+                  'q': request.GET['query'], 'start': i * 10}
 
-    # extracting data in json format
-    custom_search_engine_data = r.json()
+        # sending get request and saving the response as response object
+        r = requests.get(url=custom_search_engine_url, params=PARAMS)
 
-    print(custom_search_engine_data)
+        # extracting data in json format
+        custom_search_engine_data = r.json()
+
+        for j in range(len(custom_search_engine_data['items'])):
+            linkedin_url_list.append(custom_search_engine_data['items'][j]['link'])
+
+            # linkedin_url_data = custom_search_engine_data['items']
+            #
+            # print(custom_search_engine_data['items'][0]['link'])
 
     return HttpResponse(
         json.dumps(
             {
-                'current_user': 1,
+                'linkedin_url-list': linkedin_url_list,
                 'post_name': 1,
                 'post_content': 1,
 
