@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+	.dropbtn {
+    background-color: #656b65;
+    color: white;
+    padding: 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    height: 40px;
+    width: 250px;
+    resize: both;
+    overflow: auto;
+}
+​
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}
+​
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 10px;
+    height: 30px;
+    width: 60px;
+}
+​
+.output {
+    width: 100%;
+}
+.tr {
+    background-color: #656b65;
+    color: white;
+    padding: 20px;
+    font-size: 16px;
+}
+	</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+​
+<body>
+
+                    <div id="bloc2">
+                        <select name="submit_new" id="submit_new">
+                            <option value="epic beaker anatomic pathology">Epic Beaker Anatomic Pathology</option>
+                            <option value="epic beaker clinical pathology">Epic Beaker Clinical Pathology</option>
+                            <option value="epic radiant"> Epic Radiant</option>
+                            <option value="epic cupid"> Epic Cupid</option>
+                        </select>
+
+                        <button type="submit" id="submit_new_button">Go</button>
+                    </div>
+
+    <script type="text/javascript">
+$("#submit_new_button").click(function() {
+    var link = '{% url 'result' 'NEWVALUESTUB' %}';
+    link = link.replace('NEWVALUESTUB', $("#submit_new").val());
+    window.location.href = link;
+});
+</script>
+</body>
+</html>

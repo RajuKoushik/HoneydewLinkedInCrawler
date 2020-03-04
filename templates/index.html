@@ -1,65 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div>
-    <table cellpadding="2" cellspacing="2" border="0" bgcolor="#dfdfdf" width="40%" align="center">
-        <thead>
-        <tr>
-            <th width="30%">Name</th>
-            <th width="50%">Certifications</th>
-            <th width="12%">Current Employmer</th>
-            <th width="12%">Companies</th>
-        </tr>
-        </thead>
-        <tbody id="tableData"></tbody>
-    </table>
-</div>
-
-<style>
-    table, td {
-        border: 1px solid black;
-    }
-</style>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: 'http://127.0.0.1:8000/crawl',
-            datatype: 'json',
-            type: 'GET',
-            success: function (data) {
-                alert("Got data!")
-                jData = JSON.parse(data)
-                alert("got json products!");
-                tableFromResponse(jData);
-            }
-        });
-    });
-
-    function tableFromResponse(responseData) {
-
-        var mainObj = JSON.parse(responseData.dict);
-
-        var k = '<tbody>'
-
-        for (i = 0; i < mainObj.length; i++) {
-
-            k += '<tr>';
-            k += '<td>' + mainObj[i][0]["name"] + '</td>';
-            k += '<td>' + mainObj[i][0]["certifications"][0] + '</td>';
-            k += '<td>' + mainObj[i][0]["current_employer"] + '</td>';
-            k += '<td>' + mainObj[i][0]["companies"][0] + '</td>';
-            k += '</tr>';
-        }
-        k += '</tbody>';
-        document.getElementById('tableData').innerHTML = k;
-    }
-</script>
-</body>
+{% load render_table from django_tables2 %}
+{% load static %}
+<!doctype html>
+<html>
+    <body>
+<form action="/crawl/{{ key }}" method="get">
+     <input type="submit" value="Need more data">
+</form>
+        {% render_table profiles %}
+    </body>
 </html>

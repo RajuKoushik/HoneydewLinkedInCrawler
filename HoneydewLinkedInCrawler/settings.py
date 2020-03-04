@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crawler'
+    'crawler',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [

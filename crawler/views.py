@@ -81,7 +81,7 @@ def get_individual_result_from_linkedin(url, driver):
                 if (extractedText == 'Experience'):
                     insideDivs = div.findAll('div')
                     for d in insideDivs:
-                        # pv-entity__summary-info pv-entity__summary-info--background-section
+                        # pv-entity_summary-info pv-entity_summary-info--background-section
                         if d.has_attr('class') and d['class'][0] == 'pv-entity__summary-info' and d['class'][
                             1] == 'pv-entity__summary-info--background-section':
                             pAll = d.findAll('p')
@@ -112,7 +112,9 @@ def get_individual_result_from_linkedin(url, driver):
 
 
 @csrf_exempt
-def crawler(request):
+def crawler(request, query):
+    print("*************************************************************************************************************************************************************")
+    print(query)
     email = "g.rajukoushik@gmail.com"
     password = "rituraja"
     actions.login(driver, email, password)
@@ -130,10 +132,10 @@ def crawler(request):
 
     linkedin_url_list = set()
 
-    for i in range(0, 6):
+    for i in range(0, 1):
         print(str(i) + "loop info")
         PARAMS = {'key': 'AIzaSyByUxDR0YO701YOETlSJZn6bfFNWIjtQBM', 'cx': '009462381166450434430:ecyvn9zudgu',
-                  'q': request.GET['query'], 'start': i * 10}
+                  'q': query, 'start': i * 10}
 
         # sending get request and saving the response as response object
         r = requests.get(url=custom_search_engine_url, params=PARAMS)
@@ -170,7 +172,7 @@ def crawler(request):
     p = Profile()
     profile_all = p.objects.all()
 
-    return render(request, 'index.html', {'profile': profile_all, })
+    return 1
 
     # return HttpResponse(
     #     json.dumps(
@@ -185,3 +187,18 @@ def crawler(request):
     #         }
     #     )
     # )
+
+
+def home(request):
+    template_name = 'home.html'
+    return render(request, template_name)
+
+
+def result(request, query):
+    template_name = 'index.html'
+    query_set = Profile.objects.all()
+    key = query
+    if key:
+        query_set =query_set.filter(certifications__icontains=key)
+
+    return render(request, template_name, {'profiles': query_set, 'key': query})
