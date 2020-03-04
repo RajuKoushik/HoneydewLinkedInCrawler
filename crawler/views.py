@@ -179,6 +179,8 @@ def crawler(request):
     #             'post_name': str(name_list),
     #             'post_content': 1,
     #             'dict': dicty
+    O
+
     #
     #         }
     #     )
