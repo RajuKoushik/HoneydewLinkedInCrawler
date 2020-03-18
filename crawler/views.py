@@ -198,7 +198,17 @@ def result(request, query):
     template_name = 'index.html'
     query_set = Profile.objects.all()
     key = query
-    if key:
-        query_set =query_set.filter(certifications__icontains=key)
+    key_list = key.split()
+    if key == 'epic beaker anatomic pathology':
+        query_set =query_set.filter(certifications__icontains=key_list[2])
+
+    if key == 'epic beaker clinical pathology':
+        query_set =query_set.filter(certifications__icontains=key_list[2])
+
+    if key == 'epic cupid':
+        query_set =query_set.filter(certifications__icontains=key_list[1])
+
+    if key == 'epic radiant':
+        query_set =query_set.filter(certifications__icontains=key_list[1])
 
     return render(request, template_name, {'profiles': query_set, 'key': query})
