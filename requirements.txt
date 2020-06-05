@@ -6,7 +6,7 @@ Click==7.0
 colorama==0.4.3
 configparser==4.0.2
 crayons==0.3.0
-Django==3.0.3
+Django==3.0.7
 fake-useragent==0.1.11
 get==2019.4.13
 idna==2.8
